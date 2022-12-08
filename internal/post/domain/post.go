@@ -20,11 +20,9 @@ type Post struct {
 
 type PostRepository interface {
 	Create(ctx context.Context, p *Post) error
-
 	Get(ctx context.Context, id int) (*Post, error)
 	GetByAuthor(ctx context.Context, author string) ([]Post, error)
 	GetAll() ([]Post, error)
-
 	Save(ctx context.Context, p *Post) error
 	Delete(ctx context.Context, id int) error
 }
