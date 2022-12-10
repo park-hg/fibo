@@ -24,7 +24,7 @@ func (h handler) GetByPostID(c *fiber.Ctx) error {
 	panic("implement me")
 }
 
-func (h handler) GetByUserID(c *fiber.Ctx) error {
+func (h handler) GetByAuthorID(c *fiber.Ctx) error {
 	//TODO implement me
 	panic("implement me")
 }
