@@ -1,18 +1,34 @@
 package domain
 
-import "context"
+import (
+	"context"
+	"fibo/internal/comment/adapter"
+	"gorm.io/gorm"
+	"time"
+)
 
 type Comment struct {
-	Author   string `json:"author"`
-	Post     string `json:"post"`
-	Content  string `json:"content"`
-	CreateAt string `json:"create_at"`
+	ID       uint      `json:"id,omitempty"`
+	AuthorID uint      `json:"author_id,omitempty"`
+	PostID   uint      `json:"post_id,omitempty"`
+	Content  string    `json:"content"`
+	CreateAt time.Time `json:"create_at"`
 }
 
 type CommentRepository interface {
-	Create(ctx context.Context, c *Comment) error
-	Get(ctx context.Context, id int) (*Comment, error)
-	GetByPost(ctx context.Context, post string) ([]Comment, error)
-	Save(ctx context.Context, c *Comment) error
-	Delete(ctx context.Context, id int) error
+	Create(ctx context.Context, c Comment) error
+	Get(ctx context.Context, commentID uint) (Comment, error)
+	GetByPostID(ctx context.Context, postID uint) ([]Comment, error)
+	GetByUserID(ctx context.Context, userID uint) ([]Comment, error)
+	Save(ctx context.Context, c Comment) error
+	Delete(ctx context.Context, commentID uint) error
+}
+
+func (c *Comment) ToDBModel() adapter.Comment {
+	return adapter.Comment{
+		Model:   gorm.Model{},
+		Content: c.Content,
+		UserID:  c.AuthorID,
+		PostID:  c.PostID,
+	}
 }
