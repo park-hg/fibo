@@ -10,21 +10,19 @@ type User struct {
 
 	Name     string
 	LoggedIn bool
-	//Posts    []postAdapter.Post `gorm:"foreignKey:AuthorID"`
-	//Comments []commentAdapter.Comment
 }
 
-func (u *User) ToDomain() domain.User {
-	//PostDomains := make([]postDomain.Post, len(u.Posts))
-	//for i, p := range u.Posts {
-	//	PostDomains[i] = p.ToDomain()
-	//}
-	//CommentDomains := make([]commentDomain.Comment, len(u.Comments))
-	//for j, c := range u.Comments {
-	//	CommentDomains[j] = c.ToDomain()
-	//}
+func (u User) ToDomain() domain.User {
 	return domain.User{
 		ID:       &u.ID,
+		Name:     u.Name,
+		LoggedIn: u.LoggedIn,
+	}
+}
+
+func ToDBModel(u domain.User) User {
+	return User{
+		Model:    gorm.Model{},
 		Name:     u.Name,
 		LoggedIn: u.LoggedIn,
 	}

@@ -12,29 +12,33 @@ import (
 )
 
 type Configuration struct {
-	user     string
-	password string
-	db       string
-	host     string
+	User     string `json:"user"`
+	Password string `json:"password"`
+	DB       string `json:"db"`
+	Host     string `json:"host"`
 }
 
 func NewMySQLRepository() *gorm.DB {
-	file, err := os.Open("../config.json")
+	file, err := os.Open("./config.json")
 	defer func(file *os.File) {
 		err := file.Close()
 		if err != nil {
-			panic("dsn 설정 실패하였습니다.")
+			fmt.Println(file, err)
+			panic("no such file")
 		}
 	}(file)
 	decoder := json.NewDecoder(file)
 	config := Configuration{}
 	err = decoder.Decode(&config)
 	if err != nil {
+		fmt.Println(err)
 		panic("dsn 설정에 실패하였습니다.")
 	}
-	dsn := fmt.Sprintf("%s:%s@(%s:3306)/%s", config.user, config.password, config.host, config.db)
+	dsn := fmt.Sprintf("%s:%s@(%s:3306)/%s", config.User, config.Password, config.Host, config.DB)
+
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
+		fmt.Println(dsn, err)
 		panic("db 연결에 실패하였습니다.")
 	}
 
@@ -43,7 +47,7 @@ func NewMySQLRepository() *gorm.DB {
 		&postAdapter.Post{},
 		&userAdapter.User{},
 	}
-
+	
 	err = db.AutoMigrate(models...)
 	if err != nil {
 		return nil

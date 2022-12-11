@@ -11,8 +11,8 @@ type MySQLCommentRepository struct {
 }
 
 func (m MySQLCommentRepository) Create(ctx context.Context, c domain.Comment) error {
-	comment := c.ToDBModel()
-	err := m.db.WithContext(ctx).Create(comment).Error
+	comment := ToDBModel(c)
+	err := m.db.WithContext(ctx).Create(&comment).Error
 	if err != nil {
 		return err
 	}
@@ -54,9 +54,12 @@ func (m MySQLCommentRepository) GetByUserID(ctx context.Context, userID uint) ([
 	return commentDomains, nil
 }
 
-func (m MySQLCommentRepository) Save(ctx context.Context, c domain.Comment) error {
-	comment := c.ToDBModel()
-	err := m.db.WithContext(ctx).Save(&comment).Error
+func (m MySQLCommentRepository) Save(ctx context.Context, commentID uint, c domain.Comment) error {
+	err := m.db.WithContext(ctx).Where("id = ?", commentID).Updates(Comment{
+		Content: c.Content,
+		UserID:  c.AuthorID,
+		PostID:  c.PostID,
+	}).Error
 	if err != nil {
 		return err
 	}

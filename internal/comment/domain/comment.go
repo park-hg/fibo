@@ -2,8 +2,6 @@ package domain
 
 import (
 	"context"
-	"fibo/internal/comment/adapter"
-	"gorm.io/gorm"
 	"time"
 )
 
@@ -20,15 +18,6 @@ type CommentRepository interface {
 	Get(ctx context.Context, commentID uint) (Comment, error)
 	GetByPostID(ctx context.Context, postID uint) ([]Comment, error)
 	GetByUserID(ctx context.Context, userID uint) ([]Comment, error)
-	Save(ctx context.Context, c Comment) error
+	Save(ctx context.Context, commentID uint, c Comment) error
 	Delete(ctx context.Context, commentID uint) error
-}
-
-func (c *Comment) ToDBModel() adapter.Comment {
-	return adapter.Comment{
-		Model:   gorm.Model{},
-		Content: c.Content,
-		UserID:  c.AuthorID,
-		PostID:  c.PostID,
-	}
 }

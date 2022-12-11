@@ -2,8 +2,7 @@ package adapter
 
 import (
 	"context"
-	commentDomain "fibo/internal/comment/domain"
-	postDomain "fibo/internal/post/domain"
+	"errors"
 	"fibo/internal/user/domain"
 	"gorm.io/gorm"
 )
@@ -13,38 +12,71 @@ type MySQLUserRepository struct {
 }
 
 func (m MySQLUserRepository) Create(ctx context.Context, u domain.User) error {
-	//TODO implement me
-	panic("implement me")
+	user := ToDBModel(u)
+	err := m.db.WithContext(ctx).Create(&user).Error
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
-func (m MySQLUserRepository) GetByName(ctx context.Context, name string) (domain.User, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (m MySQLUserRepository) GetPostsByName(ctx context.Context, name string) ([]postDomain.Post, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (m MySQLUserRepository) GetCommentsByName(ctx context.Context, name string) ([]commentDomain.Comment, error) {
-	//TODO implement me
-	panic("implement me")
+func (m MySQLUserRepository) GetByName(ctx context.Context, name string) ([]domain.User, error) {
+	var users []User
+	err := m.db.WithContext(ctx).Where(&User{Name: name}).Find(&users).Error
+	if err != nil {
+		return nil, err
+	}
+	userDomains := make([]domain.User, len(users))
+	for i, u := range users {
+		userDomains[i] = u.ToDomain()
+	}
+	return userDomains, nil
 }
 
 func (m MySQLUserRepository) Login(ctx context.Context, id uint) error {
-	//TODO implement me
-	panic("implement me")
+	var user User
+	err := m.db.WithContext(ctx).Where("id = ?", id).First(&user).Error
+	if err != nil {
+		return err
+	}
+	if user.LoggedIn {
+		return errors.New("already logged in!!")
+	}
+	err = m.db.WithContext(ctx).Where("id = ?", id).Updates(User{
+		LoggedIn: true,
+	}).Error
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (m MySQLUserRepository) Logout(ctx context.Context, id uint) error {
-	//TODO implement me
-	panic("implement me")
+	var user User
+	err := m.db.WithContext(ctx).Where("id = ?", id).First(&user).Error
+	if err != nil {
+		return err
+	}
+	if !user.LoggedIn {
+		return errors.New("already logged out!!")
+	}
+
+	err = m.db.WithContext(ctx).Where("id = ?", id).Updates(User{
+		LoggedIn: false,
+	}).Error
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
-func (m MySQLUserRepository) IsLoggedIn(ctx context.Context, id uint) error {
-	//TODO implement me
-	panic("implement me")
+func (m MySQLUserRepository) IsLoggedIn(ctx context.Context, id uint) (bool, error) {
+	var user User
+	err := m.db.WithContext(ctx).Where("id = ?", id).First(&user).Error
+	if err != nil {
+		return false, err
+	}
+	return user.LoggedIn, nil
 }
 
 func NewMySQLUserRepository(db *gorm.DB) domain.UserRepository {

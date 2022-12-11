@@ -5,10 +5,10 @@ import (
 )
 
 type Handler interface {
-	Create(ctx *fiber.Ctx) error
-	Get(ctx *fiber.Ctx) error
-	GetByAuthor(ctx *fiber.Ctx) error
-	GetAll(ctx *fiber.Ctx) error
-	Save(ctx *fiber.Ctx) error
-	Delete(ctx *fiber.Ctx) error
+	Create(c *fiber.Ctx) error
+	Get(c *fiber.Ctx) error
+	GetByAuthor(c *fiber.Ctx) error
+	GetAll(c *fiber.Ctx) error
+	Save(c *fiber.Ctx) error
+	Delete(c *fiber.Ctx) error
 }

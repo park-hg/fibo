@@ -10,7 +10,7 @@ type CommentUseCases interface {
 	Get(ctx context.Context, commentID uint) (domain.Comment, error)
 	GetByPostID(ctx context.Context, postID uint) ([]domain.Comment, error)
 	GetByAuthorID(ctx context.Context, AuthorID uint) ([]domain.Comment, error)
-	Save(ctx context.Context, c domain.Comment) error
+	Save(ctx context.Context, commentID uint, c domain.Comment) error
 	Delete(ctx context.Context, commentID uint) error
 }
 
@@ -34,8 +34,8 @@ func (uc usecases) GetByAuthorID(ctx context.Context, AuthorID uint) ([]domain.C
 	return uc.commentRepo.GetByUserID(ctx, AuthorID)
 }
 
-func (uc usecases) Save(ctx context.Context, c domain.Comment) error {
-	return uc.commentRepo.Save(ctx, c)
+func (uc usecases) Save(ctx context.Context, commentID uint, c domain.Comment) error {
+	return uc.commentRepo.Save(ctx, commentID, c)
 }
 
 func (uc usecases) Delete(ctx context.Context, commentID uint) error {
