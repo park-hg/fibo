@@ -14,7 +14,7 @@ type Post struct {
 	UserID  uint
 }
 
-func (p *Post) ToDomain() domain.Post {
+func (p Post) ToDomain() domain.Post {
 	return domain.Post{
 		ID:        p.ID,
 		Title:     p.Title,
