@@ -9,5 +9,5 @@ func Router(router fiber.Router, handler Handler) {
 	router.Get("/:name/comments", handler.GetCommentsByName)
 	router.Put("/:id/login", handler.Login)
 	router.Put("/:id/logout", handler.Logout)
-	router.Get("/is-online", handler.IsLoggedIn)
+	router.Get("/:name/is-online", handler.IsLoggedIn)
 }

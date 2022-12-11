@@ -17,5 +17,5 @@ type UserRepository interface {
 	GetByName(ctx context.Context, name string) ([]User, error)
 	Login(ctx context.Context, userID uint) error
 	Logout(ctx context.Context, userID uint) error
-	IsLoggedIn(ctx context.Context, userID uint) (bool, error)
+	IsLoggedIn(ctx context.Context, name string) (bool, error)
 }

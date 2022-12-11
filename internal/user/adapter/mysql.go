@@ -70,9 +70,9 @@ func (m MySQLUserRepository) Logout(ctx context.Context, id uint) error {
 	return nil
 }
 
-func (m MySQLUserRepository) IsLoggedIn(ctx context.Context, id uint) (bool, error) {
+func (m MySQLUserRepository) IsLoggedIn(ctx context.Context, name string) (bool, error) {
 	var user User
-	err := m.db.WithContext(ctx).Where("id = ?", id).First(&user).Error
+	err := m.db.WithContext(ctx).Where("name = ?", name).First(&user).Error
 	if err != nil {
 		return false, err
 	}

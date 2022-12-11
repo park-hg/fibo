@@ -10,7 +10,7 @@ type UserUseCases interface {
 	GetByName(ctx context.Context, name string) ([]domain.User, error)
 	Login(ctx context.Context, userID uint) error
 	Logout(ctx context.Context, userID uint) error
-	IsLoggedIn(ctx context.Context, userID uint) (bool, error)
+	IsLoggedIn(ctx context.Context, name string) (bool, error)
 }
 
 type usecases struct {
@@ -33,8 +33,8 @@ func (uc usecases) Logout(ctx context.Context, userID uint) error {
 	return uc.userRepo.Logout(ctx, userID)
 }
 
-func (uc usecases) IsLoggedIn(ctx context.Context, userID uint) (bool, error) {
-	return uc.userRepo.IsLoggedIn(ctx, userID)
+func (uc usecases) IsLoggedIn(ctx context.Context, name string) (bool, error) {
+	return uc.userRepo.IsLoggedIn(ctx, name)
 }
 
 func NewUserUseCases(ur domain.UserRepository) UserUseCases {

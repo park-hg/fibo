@@ -29,7 +29,7 @@ func (h handler) Create(c *fiber.Ctx) error {
 
 func (h handler) Get(c *fiber.Ctx) error {
 	c.Set("Content-Type", "application/json")
-	commentID, err := strconv.ParseUint(c.Params("id"), 0, 10)
+	commentID, err := strconv.ParseUint(c.Params("id"), 0, 32)
 	if err != nil {
 		return c.SendStatus(http.StatusBadRequest)
 	}
